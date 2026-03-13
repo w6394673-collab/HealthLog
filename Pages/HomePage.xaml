@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Home page where users enter food and estimate nutrition -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HealthLog.Pages.HomePage"
+             Title="Home">
+
+    <ScrollView>
+        <!-- Main vertical layout for arranging UI elements -->
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Display current date -->
+            <Frame BorderColor="Black"
+               CornerRadius="0"
+               HasShadow="False"
+               Padding="10">
+                <Label x:Name="dateLabel"
+       Text="Date:"
+       FontSize="16"/>
+            </Frame>
+            <!-- Input field where users enter food items -->
+            <Frame BorderColor="Black"
+               CornerRadius="0"
+               HasShadow="False"
+               Padding="10">
+                <Entry x:Name="foodEntry"
+                   Placeholder="Please enter the text." />
+            </Frame>
+            <!-- Button to trigger nutrition estimation -->
+            <Button Text="Estimate"
+                Clicked="OnEstimateClicked" />
+            <!-- Section showing estimated nutrition values -->
+            <Frame BorderColor="Black"
+               CornerRadius="0"
+               HasShadow="False"
+               Padding="10">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Estimated Nutrition:"
+                       FontAttributes="Bold" />
+
+                    <Label x:Name="caloriesLabel"
+                       Text="- Calories : xx/xx Kcal" />
+
+                    <Label x:Name="proteinLabel"
+                       Text="- Protein : xx/xx g" />
+
+                    <Label x:Name="carbsLabel"
+                       Text="- Carbs : xx/xx g" />
+
+                    <Label x:Name="fatLabel"
+                       Text="- Fat : xx/xx g" />
+
+                    <Label x:Name="waterLabel"
+                       Text="- Water : xx/xx ml" />
+                </VerticalStackLayout>
+            </Frame>
+            <!-- Suggestion area for nutrition feedback -->
+            <Frame BorderColor="Black"
+               CornerRadius="0"
+               HasShadow="False"
+               Padding="10">
+                <Label x:Name="suggestionLabel"
+       Text="After the estimation is completed, suggestions will be provided. And provide a pop-up reminder"
+       LineBreakMode="WordWrap" />
+            </Frame>
+            <!-- Bottom navigation buttons -->
+            <Grid ColumnDefinitions="*,*,*"
+              ColumnSpacing="10"
+              Margin="0,30,0,0">
+
+                <Button Text="Home"
+                    TextColor="Red"
+                    Grid.Column="0" />
+
+                <Button Text="Previous Records"
+                    Grid.Column="1" 
+                        Clicked="OnPreviousRecordsClicked"/>
+
+                <Button Text="Goals &amp; Setting"
+                    Grid.Column="2" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
