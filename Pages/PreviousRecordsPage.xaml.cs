@@ -5,12 +5,18 @@ namespace HealthLog.Pages;
 
 public partial class PreviousRecordsPage : ContentPage
 {
-    // Constructor: initialize page and load saved records
+    private readonly RecordRepository recordRepository = new();
+    // Constructor: initialize the page
     public PreviousRecordsPage()
     {
         InitializeComponent();
+    }
         // Bind the record list to the CollectionView
-        recordsCollectionView.ItemsSource = RecordStore.Records;
+     protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        recordsCollectionView.ItemsSource = await recordRepository.GetRecordsAsync();
+    
     }
     // Triggered when the "View" button is clicked
     private async void OnViewClicked(object sender, EventArgs e)
@@ -19,7 +25,7 @@ public partial class PreviousRecordsPage : ContentPage
         // Get the selected food record
         FoodRecord record = (FoodRecord)button.CommandParameter;
         // Show detailed nutrition information
-        await DisplayAlert(record.RecordName, record.DetailText, "OK");
+        await DisplayAlertAsync(record.RecordName, record.DetailText, "OK");
     }
     // Triggered when the "Delete" button is clicked
     private async void OnDeleteClicked(object sender, EventArgs e)
@@ -27,14 +33,15 @@ public partial class PreviousRecordsPage : ContentPage
         Button button = (Button)sender;
         FoodRecord record = (FoodRecord)button.CommandParameter;
         // Ask user for confirmation before deleting
-        bool confirm = await DisplayAlert("Delete",
+        bool confirm = await DisplayAlertAsync("Delete",
             $"Delete record: {record.RecordName}?",
             "Yes",
             "No");
 
         if (confirm)
         {
-            RecordStore.DeleteRecord(record);
+            await recordRepository.DeleteRecordAsync(record.Id);
+            recordsCollectionView.ItemsSource = await recordRepository.GetRecordsAsync();
         }
     }
     // Navigate back to the Home page

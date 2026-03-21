@@ -9,30 +9,30 @@
         <!-- Main vertical layout for arranging UI elements -->
         <VerticalStackLayout Padding="20" Spacing="20">
             <!-- Display current date -->
-            <Frame BorderColor="Black"
-               CornerRadius="0"
-               HasShadow="False"
-               Padding="10">
+            <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10">
                 <Label x:Name="dateLabel"
        Text="Date:"
        FontSize="16"/>
-            </Frame>
+            </Border>
             <!-- Input field where users enter food items -->
-            <Frame BorderColor="Black"
-               CornerRadius="0"
-               HasShadow="False"
-               Padding="10">
+            <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10">
                 <Entry x:Name="foodEntry"
                    Placeholder="Please enter the text." />
-            </Frame>
+            </Border>
             <!-- Button to trigger nutrition estimation -->
             <Button Text="Estimate"
                 Clicked="OnEstimateClicked" />
             <!-- Section showing estimated nutrition values -->
-            <Frame BorderColor="Black"
-               CornerRadius="0"
-               HasShadow="False"
-               Padding="10">
+            <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10">
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Estimated Nutrition:"
                        FontAttributes="Bold" />
@@ -52,16 +52,16 @@
                     <Label x:Name="waterLabel"
                        Text="- Water : xx/xx ml" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
             <!-- Suggestion area for nutrition feedback -->
-            <Frame BorderColor="Black"
-               CornerRadius="0"
-               HasShadow="False"
-               Padding="10">
+            <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10">
                 <Label x:Name="suggestionLabel"
        Text="After the estimation is completed, suggestions will be provided. And provide a pop-up reminder"
        LineBreakMode="WordWrap" />
-            </Frame>
+            </Border>
             <!-- Bottom navigation buttons -->
             <Grid ColumnDefinitions="*,*,*"
               ColumnSpacing="10"

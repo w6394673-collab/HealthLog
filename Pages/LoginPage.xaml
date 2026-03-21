@@ -18,9 +18,9 @@
         <Entry
             x:Name="usernameEntry"
             Placeholder="Username" />
-        <!-- Username input box -->
-        <Label Text="Please enter your password." />
         <!-- Instruction for password input -->
+        <Label Text="Please enter your password." />
+        <!-- Password input box -->
         <Entry
             x:Name="passwordEntry"
             Placeholder="Password"

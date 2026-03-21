@@ -13,11 +13,11 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <!-- Each record displayed inside a frame -->
-                    <Frame BorderColor="Black"
-                           CornerRadius="0"
-                           HasShadow="False"
-                           Padding="10"
-                           Margin="0,0,0,10">
+                    <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10"
+        Margin="0,0,0,10">
 
                         <VerticalStackLayout Spacing="10">
                             <!-- Display summary text of the record -->
@@ -34,7 +34,7 @@
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
 
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 

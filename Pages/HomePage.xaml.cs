@@ -5,6 +5,7 @@ namespace HealthLog.Pages;
 
 public partial class HomePage : ContentPage
 {
+    private readonly RecordRepository recordRepository = new();
     // Constructor: initialize page and show current date
     public HomePage()
     {
@@ -16,11 +17,11 @@ public partial class HomePage : ContentPage
     private async void OnEstimateClicked(object sender, EventArgs e)
     {
         // Get food input from the text box
-        string input = foodEntry.Text?.ToLower();
+        string input = (foodEntry.Text ?? "").ToLower();
         // Check if input is empty
         if (string.IsNullOrWhiteSpace(input))
         {
-            await DisplayAlert("Reminder", "Please enter food.", "OK");
+            await DisplayAlertAsync("Reminder", "Please enter food.", "OK");
             return;
         }
         // Split multiple foods entered by the user
@@ -59,18 +60,18 @@ public partial class HomePage : ContentPage
         carbsLabel.Text = $"- Carbs : {carbs} g";
         fatLabel.Text = $"- Fat : {fat} g";
         waterLabel.Text = $"- Water : {water} ml";
-        // Update UI labels with calculated nutrition values
+        // Show nutrition suggestion based on the result
         if (protein < 20 || water < 100)
         {
             suggestionLabel.Text = "Nutrition is not enough. Please add more protein or water.";
-            await DisplayAlert("Reminder", "Your nutrition may not be enough.", "OK");
+            await DisplayAlertAsync("Reminder", "Your nutrition may not be enough.", "OK");
         }
         else
         {
             suggestionLabel.Text = "Good job. Your nutrition looks balanced.";
-            await DisplayAlert("Reminder", "Your nutrition looks good.", "OK");
+            await DisplayAlertAsync("Reminder", "Your nutrition looks good.", "OK");
         }
-        // Provide simple nutrition suggestion
+        // Create a record object and save it to the database
         FoodRecord record = new FoodRecord
         {
             Date = DateTime.Now.ToString("dd/MM/yyyy"),
@@ -82,7 +83,7 @@ public partial class HomePage : ContentPage
             Water = water
         };
 
-        RecordStore.AddRecord(record);
+        await recordRepository.AddRecordAsync(record);
         // Clear input box after calculation
         foodEntry.Text = "";
     }

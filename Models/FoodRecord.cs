@@ -6,9 +6,10 @@ namespace HealthLog.Models;
 // Model class used to store one food record
 public class FoodRecord
 {
+    public int Id { get; set; }
     // Basic information about the record
-    public string Date { get; set; }
-    public string RecordName { get; set; }
+    public string Date { get; set; } = "";
+    public string RecordName { get; set; } = "";
     // Nutrition values calculated from the food input
     public int Calories { get; set; }
     public int Protein { get; set; }

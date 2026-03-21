@@ -15,7 +15,7 @@ public partial class LoginPage : ContentPage
         // Simple validation for empty input
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            await DisplayAlert("Error", "Please enter username and password.", "OK");
+            await DisplayAlertAsync("Error", "Please enter username and password.", "OK");
         }
         else
         {
