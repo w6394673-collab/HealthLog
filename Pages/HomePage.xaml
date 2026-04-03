@@ -6,77 +6,70 @@
              Title="Home">
 
     <ScrollView>
-        <!-- Main vertical layout for arranging UI elements -->
         <VerticalStackLayout Padding="20" Spacing="20">
-            <!-- Display current date -->
+
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
         Padding="10">
-                <Label x:Name="dateLabel"
-       Text="Date:"
-       FontSize="16"/>
+                <Label Text="{Binding DateText}"
+           FontSize="16" />
             </Border>
-            <!-- Input field where users enter food items -->
+            
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
         Padding="10">
-                <Entry x:Name="foodEntry"
-                   Placeholder="Please enter the text." />
+                <Entry Text="{Binding FoodInput}"
+           Placeholder="Please enter the text." />
             </Border>
-            <!-- Button to trigger nutrition estimation -->
+
             <Button Text="Estimate"
-                Clicked="OnEstimateClicked" />
-            <!-- Section showing estimated nutrition values -->
+                    Command="{Binding EstimateCommand}" />
+            
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
         Padding="10">
-                <VerticalStackLayout Spacing="5">
+                <VerticalStackLayout Spacing="8">
                     <Label Text="Estimated Nutrition:"
-                       FontAttributes="Bold" />
-
-                    <Label x:Name="caloriesLabel"
-                       Text="- Calories : xx/xx Kcal" />
-
-                    <Label x:Name="proteinLabel"
-                       Text="- Protein : xx/xx g" />
-
-                    <Label x:Name="carbsLabel"
-                       Text="- Carbs : xx/xx g" />
-
-                    <Label x:Name="fatLabel"
-                       Text="- Fat : xx/xx g" />
-
-                    <Label x:Name="waterLabel"
-                       Text="- Water : xx/xx ml" />
+               FontSize="16" />
+                    <Label Text="{Binding CaloriesText}" />
+                    <Label Text="{Binding ProteinText}" />
+                    <Label Text="{Binding CarbsText}" />
+                    <Label Text="{Binding FatText}" />
+                    <Label Text="{Binding WaterText}" />
                 </VerticalStackLayout>
             </Border>
-            <!-- Suggestion area for nutrition feedback -->
+
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
         Padding="10">
-                <Label x:Name="suggestionLabel"
-       Text="After the estimation is completed, suggestions will be provided. And provide a pop-up reminder"
-       LineBreakMode="WordWrap" />
+                <Label Text="{Binding SuggestionText}"
+           LineBreakMode="WordWrap" />
             </Border>
-            <!-- Bottom navigation buttons -->
-            <Grid ColumnDefinitions="*,*,*"
-              ColumnSpacing="10"
-              Margin="0,30,0,0">
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
 
                 <Button Text="Home"
-                    TextColor="Red"
-                    Grid.Column="0" />
+            Grid.Column="0" >
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                     Binding="{Binding IsHomePage}"
+                     Value="True">
+                        <Setter Property="TextColor" Value="Red" />
+                    </DataTrigger>
+                </Button.Triggers>
+                </Button>
 
                 <Button Text="Previous Records"
-                    Grid.Column="1" 
-                        Clicked="OnPreviousRecordsClicked"/>
+            Grid.Column="1"
+            Command="{Binding PreviousRecordsCommand}" />
 
                 <Button Text="Goals &amp; Setting"
-                    Grid.Column="2" />
+            Grid.Column="2" />
+
             </Grid>
 
         </VerticalStackLayout>

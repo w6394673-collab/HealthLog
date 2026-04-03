@@ -4,34 +4,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="HealthLog.Pages.LoginPage"
              Title="Login">
-    <!-- Vertical layout used to arrange elements from top to bottom -->
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <!-- Page title -->
-        <Label
-            Text="Log in"
-            FontSize="28"
-            HorizontalOptions="Center"
-            FontAttributes="Bold" />
-        <!-- Instruction for username input -->
-        <Label Text="Please enter your username." />
-        <!-- Username input box -->
-        <Entry
-            x:Name="usernameEntry"
-            Placeholder="Username" />
-        <!-- Instruction for password input -->
-        <Label Text="Please enter your password." />
-        <!-- Password input box -->
-        <Entry
-            x:Name="passwordEntry"
-            Placeholder="Password"
-            IsPassword="True" />
-        <!-- Password input box (hidden text) -->
-        <Button
-            Text="Enter"
-            WidthRequest="200"
-            HorizontalOptions="Center"
-            Clicked="OnLoginClicked" />
 
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
 
+            <Label Text="Login"
+                   FontSize="28"
+                   HorizontalOptions="Center" />
+            <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Please enter your username." />
+                    <Entry Text="{Binding Username}"
+               Placeholder="Username" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="Black"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 0"
+        Padding="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Please enter your password." />
+                    <Entry Text="{Binding Password}"
+               Placeholder="Password"
+               IsPassword="True" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Login"
+                    Command="{Binding LoginCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

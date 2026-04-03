@@ -1,27 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace HealthLog.Models;
-// Model class used to store one food record
+
+// Model class for storing food records
 public class FoodRecord
 {
+    [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
+
     // Basic information about the record
     public string Date { get; set; } = "";
     public string RecordName { get; set; } = "";
+
     // Nutrition values calculated from the food input
     public int Calories { get; set; }
     public int Protein { get; set; }
     public int Carbs { get; set; }
     public int Fat { get; set; }
     public int Water { get; set; }
-    // Short text shown in the Previous Records list
+
+    // Short summary shown in the previous records list
+    [Ignore]
     public string SummaryText
     {
-        get { return $"Date: {Date}   {RecordName}"; }
+        get { return $"Date: {Date}    {RecordName}"; }
     }
-    // Detailed nutrition information shown when viewing a record
+
+    // Detailed nutrition information for each record
+    [Ignore]
     public string DetailText
     {
         get
