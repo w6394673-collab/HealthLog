@@ -23,7 +23,23 @@
                 <Entry Text="{Binding FoodInput}"
            Placeholder="Please enter the text." />
             </Border>
-
+            <CollectionView ItemsSource="{Binding SuggestedFoods}"
+                SelectionMode="None"
+                HeightRequest="80">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding .}"
+                        BackgroundColor="White"
+                        TextColor="Black"
+                        BorderColor="Black"
+                         BorderWidth="1"
+                         CornerRadius="5"
+                         Margin="0,5,0,0"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectFoodCommand}"
+                    CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             <Button Text="Estimate"
                     Command="{Binding EstimateCommand}" />
             

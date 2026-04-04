@@ -1,7 +1,8 @@
-﻿using System.Windows.Input;
-using HealthLog.Data;
+﻿using HealthLog.Data;
 using HealthLog.Models;
 using HealthLog.Services;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace HealthLog.ViewModels;
 
@@ -11,19 +12,24 @@ public class HomePageViewModel : BaseViewModel
     private readonly IPageService pageService;
 
     public HomePageViewModel()
-        : this(new RecordRepository(), new PageService())
+    : this(new RecordRepository(), new PageService())
     {
     }
 
-    public HomePageViewModel(RecordRepository recordRepository, IPageService pageService)
+    public HomePageViewModel(
+        RecordRepository recordRepository,
+        IPageService pageService
+        )
     {
         this.recordRepository = recordRepository;
         this.pageService = pageService;
+
 
         DateText = "Date: " + DateTime.Now.ToString("dd/MM/yyyy");
 
         EstimateCommand = new Command(async () => await OnEstimateAsync());
         PreviousRecordsCommand = new Command(async () => await OnPreviousRecordsAsync());
+        SelectFoodCommand = new Command<string>(OnSelectFood);
     }
 
     private string dateText = "";
@@ -45,6 +51,7 @@ public class HomePageViewModel : BaseViewModel
         {
             foodInput = value;
             OnPropertyChanged();
+            UpdateSuggestions();
         }
     }
 
@@ -135,25 +142,27 @@ public class HomePageViewModel : BaseViewModel
         int fat = 0;
         int water = 0;
 
+        List<string> unsupportedFoods = new();
+
         foreach (string food in foods)
         {
-            if (food == "apple")
+            string item = food.Trim().ToLower();
+
+            if (string.IsNullOrWhiteSpace(item))
+                continue;
+
+            if (FoodData.Items.ContainsKey(item))
             {
-                calories += 52;
-                carbs += 14;
-                water += 86;
+                var data = FoodData.Items[item];
+                calories += data.Calories;
+                protein += data.Protein;
+                carbs += data.Carbs;
+                fat += data.Fat;
+                water += data.Water;
             }
-            else if (food == "egg")
+            else
             {
-                calories += 78;
-                protein += 6;
-                fat += 5;
-            }
-            else if (food == "chicken")
-            {
-                calories += 165;
-                protein += 31;
-                fat += 4;
+                unsupportedFoods.Add(item);
             }
         }
 
@@ -175,24 +184,69 @@ public class HomePageViewModel : BaseViewModel
         };
 
         await recordRepository.AddRecordAsync(record);
+        string unsupportedMessage = "";
 
+        if (unsupportedFoods.Count > 0)
+        {
+            unsupportedMessage = " Unsupported food: " + string.Join(", ", unsupportedFoods) + ".";
+        }
         if (protein < 20 || water < 100)
         {
-            SuggestionText = "Nutrition is not enough. Please add more protein or water.";
+            SuggestionText = "Nutrition is not enough. Please add more protein or water." + unsupportedMessage;
             await pageService.ShowAlertAsync("Reminder", "Your nutrition may not be enough.", "OK");
             await pageService.VibrateAsync(500);
         }
         else
         {
-            SuggestionText = "Good job. Your nutrition looks balanced.";
+            SuggestionText = "Good job. Your nutrition looks balanced." + unsupportedMessage;
             await pageService.ShowAlertAsync("Reminder", "Your nutrition looks good.", "OK");
         }
 
         FoodInput = "";
+        SuggestedFoods.Clear();
     }
+    private ObservableCollection<string> suggestedFoods = new();
+    public ObservableCollection<string> SuggestedFoods
+    {
+        get => suggestedFoods;
+        set
+        {
+            suggestedFoods = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ICommand SelectFoodCommand { get; }
 
     private async Task OnPreviousRecordsAsync()
     {
         await pageService.GoToPreviousRecordsAsync();
+    }
+
+    private void UpdateSuggestions()
+    {
+        SuggestedFoods.Clear();
+
+        string input = (FoodInput ?? "").Trim().ToLower();
+
+        if (string.IsNullOrWhiteSpace(input))
+            return;
+
+        foreach (var food in FoodData.Items.Keys)
+        {
+            if (food.StartsWith(input) && food != input)
+            {
+                SuggestedFoods.Add(food);
+            }
+        }
+    }
+
+    private void OnSelectFood(string? food)
+    {
+        if (string.IsNullOrWhiteSpace(food))
+            return;
+
+        FoodInput = food;
+        SuggestedFoods.Clear();
     }
 }
