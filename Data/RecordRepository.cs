@@ -3,7 +3,7 @@ using HealthLog.Models;
 
 namespace HealthLog.Data;
 
-// Handles database operations for food records
+// Class for managing food records in database
 public class RecordRepository
 {
     private readonly SQLiteAsyncConnection database;
@@ -12,7 +12,7 @@ public class RecordRepository
     {
         string dbPath = Path.Combine(FileSystem.AppDataDirectory, "healthlog.db");
         database = new SQLiteAsyncConnection(dbPath);
-
+        // Create table if not exists
         database.CreateTableAsync<FoodRecord>().Wait();
     }
 

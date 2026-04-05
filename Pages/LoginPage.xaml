@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
 <!-- Login page UI layout -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="HealthLog.Pages.LoginPage"
              Title="Login">
 
+    <!-- ScrollView allows content to scroll on small screens -->
     <ScrollView>
+
+        <!-- Main vertical layout -->
         <VerticalStackLayout Padding="20" Spacing="20">
 
+            <!-- Page title -->
             <Label Text="Login"
                    FontSize="28"
                    HorizontalOptions="Center" />
+
+            <!-- Username section -->
             <Border Stroke="Black"
-        StrokeThickness="1"
-        StrokeShape="RoundRectangle 0"
-        Padding="10">
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 0"
+                    Padding="10">
+
                 <VerticalStackLayout Spacing="10">
+
+                    <!-- Instruction text -->
                     <Label Text="Please enter your username." />
+
+                    <!-- Username input field -->
                     <Entry Text="{Binding Username}"
-               Placeholder="Username" />
+                           Placeholder="Username" />
+
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Password section -->
             <Border Stroke="Black"
-        StrokeThickness="1"
-        StrokeShape="RoundRectangle 0"
-        Padding="10">
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 0"
+                    Padding="10">
+
                 <VerticalStackLayout Spacing="10">
+
+                    <!-- Instruction text -->
                     <Label Text="Please enter your password." />
+
+                    <!-- Password input field (hidden) -->
                     <Entry Text="{Binding Password}"
-               Placeholder="Password"
-               IsPassword="True" />
+                           Placeholder="Password"
+                           IsPassword="True" />
+
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Login button -->
             <Button Text="Login"
                     Command="{Binding LoginCommand}" />
 

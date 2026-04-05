@@ -21,12 +21,13 @@ public class HomePageViewModel : BaseViewModel
         IPageService pageService
         )
     {
+        // Inject dependencies (database and UI service)
         this.recordRepository = recordRepository;
         this.pageService = pageService;
 
-
+        // Set current date
         DateText = "Date: " + DateTime.Now.ToString("dd/MM/yyyy");
-
+        // Commands for user actions
         EstimateCommand = new Command(async () => await OnEstimateAsync());
         PreviousRecordsCommand = new Command(async () => await OnPreviousRecordsAsync());
         SelectFoodCommand = new Command<string>(OnSelectFood);
@@ -42,7 +43,7 @@ public class HomePageViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
-
+    // User input for food
     private string foodInput = "";
     public string FoodInput
     {
@@ -51,6 +52,7 @@ public class HomePageViewModel : BaseViewModel
         {
             foodInput = value;
             OnPropertyChanged();
+            // Update suggestions when user types
             UpdateSuggestions();
         }
     }
@@ -124,24 +126,26 @@ public class HomePageViewModel : BaseViewModel
     public ICommand EstimateCommand { get; }
     public ICommand PreviousRecordsCommand { get; }
     public bool IsHomePage => true;
+    // Calculate nutrition based on user input
     private async Task OnEstimateAsync()
     {
+        // Get and clean input
         string input = (FoodInput ?? "").Trim().ToLower();
-
+        // Check if input is empty
         if (string.IsNullOrWhiteSpace(input))
         {
             await pageService.ShowAlertAsync("Reminder", "Please enter food.", "OK");
             return;
         }
-
+        // Split input into food items
         string[] foods = input.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
+        // Initialize total nutrition values
         int calories = 0;
         int protein = 0;
         int carbs = 0;
         int fat = 0;
         int water = 0;
-
+        // Store unsupported foods
         List<string> unsupportedFoods = new();
 
         foreach (string food in foods)
@@ -153,6 +157,7 @@ public class HomePageViewModel : BaseViewModel
 
             if (FoodData.Items.ContainsKey(item))
             {
+                // Add nutrition values
                 var data = FoodData.Items[item];
                 calories += data.Calories;
                 protein += data.Protein;
@@ -161,7 +166,7 @@ public class HomePageViewModel : BaseViewModel
                 water += data.Water;
             }
             else
-            {
+            {// Save unsupported food
                 unsupportedFoods.Add(item);
             }
         }
@@ -171,7 +176,7 @@ public class HomePageViewModel : BaseViewModel
         CarbsText = $"- Carbs : {carbs} g";
         FatText = $"- Fat : {fat} g";
         WaterText = $"- Water : {water} ml";
-
+        // Save record to database
         FoodRecord record = new FoodRecord
         {
             Date = DateTime.Now.ToString("dd/MM/yyyy"),
@@ -190,9 +195,11 @@ public class HomePageViewModel : BaseViewModel
         {
             unsupportedMessage = " Unsupported food: " + string.Join(", ", unsupportedFoods) + ".";
         }
+        // Provide suggestion based on nutrition
         if (protein < 20 || water < 100)
         {
             SuggestionText = "Nutrition is not enough. Please add more protein or water." + unsupportedMessage;
+            // Alert + vibration
             await pageService.ShowAlertAsync("Reminder", "Your nutrition may not be enough.", "OK");
             await pageService.VibrateAsync(500);
         }
@@ -222,7 +229,7 @@ public class HomePageViewModel : BaseViewModel
     {
         await pageService.GoToPreviousRecordsAsync();
     }
-
+    // Update food suggestions based on input
     private void UpdateSuggestions()
     {
         SuggestedFoods.Clear();
@@ -234,6 +241,7 @@ public class HomePageViewModel : BaseViewModel
 
         foreach (var food in FoodData.Items.Keys)
         {
+            // Show matching foods
             if (food.StartsWith(input) && food != input)
             {
                 SuggestedFoods.Add(food);

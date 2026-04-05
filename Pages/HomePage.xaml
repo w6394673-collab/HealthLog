@@ -4,10 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="HealthLog.Pages.HomePage"
              Title="Home">
-
+    <!-- ScrollView allows the page to scroll -->
     <ScrollView>
+        <!-- Main vertical layout -->
         <VerticalStackLayout Padding="20" Spacing="20">
-
+            <!-- Display current date -->
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
@@ -15,7 +16,7 @@
                 <Label Text="{Binding DateText}"
            FontSize="16" />
             </Border>
-            
+            <!-- Input box for user to type food -->
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
@@ -23,11 +24,14 @@
                 <Entry Text="{Binding FoodInput}"
            Placeholder="Please enter the text." />
             </Border>
+            <!-- Show suggested foods -->
             <CollectionView ItemsSource="{Binding SuggestedFoods}"
                 SelectionMode="None"
                 HeightRequest="80">
+                <!-- Template for each food item -->
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+                        <!-- Each suggestion is a button -->
                         <Button Text="{Binding .}"
                         BackgroundColor="White"
                         TextColor="Black"
@@ -35,21 +39,25 @@
                          BorderWidth="1"
                          CornerRadius="5"
                          Margin="0,5,0,0"
+                              
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectFoodCommand}"
                     CommandParameter="{Binding .}" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <!-- Button to calculate nutrition -->
             <Button Text="Estimate"
                     Command="{Binding EstimateCommand}" />
-            
+            <!-- Show estimated nutrition result -->
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
         Padding="10">
                 <VerticalStackLayout Spacing="8">
+                    <!-- Title -->
                     <Label Text="Estimated Nutrition:"
                FontSize="16" />
+                    <!-- Nutrition results -->
                     <Label Text="{Binding CaloriesText}" />
                     <Label Text="{Binding ProteinText}" />
                     <Label Text="{Binding CarbsText}" />
@@ -57,7 +65,7 @@
                     <Label Text="{Binding WaterText}" />
                 </VerticalStackLayout>
             </Border>
-
+            <!-- Suggestion or advice message -->
             <Border Stroke="Black"
         StrokeThickness="1"
         StrokeShape="RoundRectangle 0"
@@ -65,11 +73,12 @@
                 <Label Text="{Binding SuggestionText}"
            LineBreakMode="WordWrap" />
             </Border>
-
+            <!-- Bottom navigation bar -->
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-
+                <!-- Home button -->
                 <Button Text="Home"
             Grid.Column="0" >
+                    <!-- Highlight when on Home page -->
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                      Binding="{Binding IsHomePage}"
@@ -78,11 +87,11 @@
                     </DataTrigger>
                 </Button.Triggers>
                 </Button>
-
+                <!-- Navigate to previous records -->
                 <Button Text="Previous Records"
             Grid.Column="1"
             Command="{Binding PreviousRecordsCommand}" />
-
+                <!-- Goals page (not implemented yet) -->
                 <Button Text="Goals &amp; Setting"
             Grid.Column="2" />
 

@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!-- Page to display previous nutrition records -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="HealthLog.Pages.PreviousRecordsPage"
              Title="Previous Records">
-
+    <!-- ScrollView allows page scrolling -->
     <ScrollView>
+        <!-- Main layout -->
         <VerticalStackLayout Padding="20" Spacing="20">
-
+            <!-- Page title -->
             <Label Text="Previous Records"
                    FontSize="24"
                    HorizontalOptions="Center" />
-
+            <!-- List of records -->
             <CollectionView ItemsSource="{Binding Records}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+                        <!-- Each record item -->
                         <Border Stroke="Black"
-        StrokeThickness="1"
-        StrokeShape="RoundRectangle 0"
-        Padding="10"
-        Margin="0,0,0,10">
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 0"
+                                Padding="10"
+                                Margin="0,0,0,10">
 
                             <VerticalStackLayout Spacing="10">
-
+                                <!-- Record summary -->
                                 <Label Text="{Binding SummaryText}" />
-
+                                <!-- Buttons for actions -->
                                 <HorizontalStackLayout Spacing="10">
+                                    <!-- View detail button -->
                                     <Button Text="View"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewCommand}"
                     CommandParameter="{Binding .}"
                     HorizontalOptions="FillAndExpand" />
-
+                                    <!-- Delete record button -->
                                     <Button Text="Delete"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                     CommandParameter="{Binding .}"

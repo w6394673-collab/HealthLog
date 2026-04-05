@@ -2,9 +2,10 @@
 
 namespace HealthLog.Models;
 
-// Model class for storing food records
+// Model class representing a saved food record
 public class FoodRecord
 {
+    // Primary key for database (auto increment)
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
