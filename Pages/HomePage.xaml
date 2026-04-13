@@ -22,7 +22,7 @@
         StrokeShape="RoundRectangle 0"
         Padding="10">
                 <Entry Text="{Binding FoodInput}"
-           Placeholder="Please enter the text." />
+       Placeholder="Example: beef:150, rice:200, apple:100" />
             </Border>
             <!-- Show suggested foods -->
             <CollectionView ItemsSource="{Binding SuggestedFoods}"
@@ -91,9 +91,10 @@
                 <Button Text="Previous Records"
             Grid.Column="1"
             Command="{Binding PreviousRecordsCommand}" />
-                <!-- Goals page (not implemented yet) -->
+                <!-- Goals page  -->
                 <Button Text="Goals &amp; Setting"
-            Grid.Column="2" />
+        Grid.Column="2"
+        Command="{Binding GoalsSettingsCommand}" />
 
             </Grid>
 

@@ -3,6 +3,7 @@ using System.Windows.Input;
 using HealthLog.Data;
 using HealthLog.Models;
 using HealthLog.Services;
+using HealthLog.Pages;
 
 namespace HealthLog.ViewModels;
 // ViewModel for previous records page
@@ -17,6 +18,7 @@ public class PreviousRecordsPageViewModel : BaseViewModel
     public ICommand ViewCommand { get; }
     public ICommand DeleteCommand { get; }
     public ICommand HomeCommand { get; }
+    public ICommand GoalsSettingsCommand { get; }
     public bool IsPreviousPage => true;
     // Constructor
     public PreviousRecordsPageViewModel()
@@ -33,6 +35,7 @@ public class PreviousRecordsPageViewModel : BaseViewModel
         ViewCommand = new Command<FoodRecord>(async (record) => await OnViewAsync(record));
         DeleteCommand = new Command<FoodRecord>(async (record) => await OnDeleteAsync(record));
         HomeCommand = new Command(async () => await OnHomeAsync());
+        GoalsSettingsCommand = new Command(async () => await OnGoalsSettingsAsync());
     }
     // Load records from database
     public async Task LoadRecordsAsync()
@@ -88,4 +91,12 @@ public class PreviousRecordsPageViewModel : BaseViewModel
             await Application.Current.Windows[0].Page.Navigation.PopAsync();
         }
     }
+    private async Task OnGoalsSettingsAsync()
+    {
+        if (Application.Current?.Windows[0]?.Page != null)
+        {
+            await Application.Current.Windows[0].Page.Navigation.PushAsync(new GoalsSettingsPage());
+        }
+    }
+
 }

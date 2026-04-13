@@ -1,17 +1,22 @@
 using HealthLog.ViewModels;
 
 namespace HealthLog.Pages;
-// This is the code-behind for HomePage
+
+// Code-behind for HomePage
 public partial class HomePage : ContentPage
 {
-    // Constructor - runs when page is created
+    private readonly HomePageViewModel viewModel;
+
     public HomePage()
     {
-        // Initialize UI components defined in XAML
         InitializeComponent();
-        // Set the BindingContext to ViewModel (MVVM pattern)
-        // This allows UI to bind data and commands from ViewModel
-        BindingContext = new HomePageViewModel();
+        viewModel = new HomePageViewModel();
+        BindingContext = viewModel;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        viewModel.RefreshTargets();
     }
 }
-

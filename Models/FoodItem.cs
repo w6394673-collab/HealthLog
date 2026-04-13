@@ -7,13 +7,9 @@ public class FoodItem
     // Name of the food
     public string Name { get; set; } = "";
     // Calories value
-    public int Calories { get; set; }
-    // Protein amount
-    public int Protein { get; set; }
-    // Carbohydrates amount
-    public int Carbs { get; set; }
-    // Fat amount
-    public int Fat { get; set; }
-    // Water content
-    public int Water { get; set; }
+    public double Calories { get; set; }
+    public double Protein { get; set; }
+    public double Carbs { get; set; }
+    public double Fat { get; set; }
+    public double Water { get; set; }
 }

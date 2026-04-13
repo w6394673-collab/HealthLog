@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HealthLog.Pages.GoalsSettingsPage"
+             Title="Goals &amp; Setting"
+             BackgroundColor="{Binding PageBackgroundColor}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Border Stroke="Black" Padding="10">
+                <Entry Placeholder="Height (cm)"
+                       Text="{Binding HeightText}"
+                       Keyboard="Numeric"
+                       TextColor="{Binding TextColor}"
+                       FontSize="{Binding AppFontSize}" />
+            </Border>
+
+            <Border Stroke="Black" Padding="10">
+                <Entry Placeholder="Weight (kg)"
+                       Text="{Binding WeightText}"
+                       Keyboard="Numeric"
+                       TextColor="{Binding TextColor}"
+                       FontSize="{Binding AppFontSize}" />
+            </Border>
+
+            <Border Stroke="Black" Padding="10">
+                <Picker Title="Sex"
+                        SelectedItem="{Binding Sex}"
+                        TitleColor="{Binding TextColor}"
+                        TextColor="{Binding TextColor}"
+                        FontSize="{Binding AppFontSize}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Male</x:String>
+                            <x:String>Female</x:String>
+                            <x:String>Prefer not to say</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Border>
+
+            <Label Text="{Binding BMIText}"
+                   TextColor="{Binding TextColor}"
+                   FontSize="{Binding AppFontSize}" />
+
+            <Border Stroke="Black" Padding="10">
+                <Picker Title="Goal"
+                        SelectedItem="{Binding Goal}"
+                        TitleColor="{Binding TextColor}"
+                        TextColor="{Binding TextColor}"
+                        FontSize="{Binding AppFontSize}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Lose fat</x:String>
+                            <x:String>Build muscle</x:String>
+                            <x:String>Maintain</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Border>
+
+            <Border Stroke="Black" Padding="10">
+                <Picker Title="Background"
+                        SelectedItem="{Binding BackgroundMode}"
+                        TitleColor="{Binding TextColor}"
+                        TextColor="{Binding TextColor}"
+                        FontSize="{Binding AppFontSize}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Bright</x:String>
+                            <x:String>Dark</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Border>
+
+            <Border Stroke="Black" Padding="10">
+                <Picker Title="Font size"
+                        SelectedItem="{Binding FontSizeMode}"
+                        TitleColor="{Binding TextColor}"
+                        TextColor="{Binding TextColor}"
+                        FontSize="{Binding AppFontSize}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Small</x:String>
+                            <x:String>Medium</x:String>
+                            <x:String>Large</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Border>
+
+            <Label Text="{Binding TargetCaloriesText}" TextColor="{Binding TextColor}" FontSize="{Binding AppFontSize}" />
+            <Label Text="{Binding TargetProteinText}" TextColor="{Binding TextColor}" FontSize="{Binding AppFontSize}" />
+            <Label Text="{Binding TargetCarbsText}" TextColor="{Binding TextColor}" FontSize="{Binding AppFontSize}" />
+            <Label Text="{Binding TargetFatText}" TextColor="{Binding TextColor}" FontSize="{Binding AppFontSize}" />
+            <Label Text="{Binding TargetWaterText}" TextColor="{Binding TextColor}" FontSize="{Binding AppFontSize}" />
+
+            <Button Text="Save"
+                    Command="{Binding SaveCommand}" />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,20,0,0">
+
+                <!-- Home button -->
+                <Button Text="Home"
+            Grid.Column="0"
+            Command="{Binding HomeCommand}" />
+
+                <!-- Previous records button -->
+                <Button Text="Previous Records"
+            Grid.Column="1"
+            Command="{Binding PreviousRecordsCommand}" />
+
+                <!-- Goals button -->
+                <Button Text="Goals &amp; Setting"
+            Grid.Column="2">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                         Binding="{Binding IsGoalsPage}"
+                         Value="True">
+                            <Setter Property="TextColor" Value="Red" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -3,6 +3,7 @@ using HealthLog.Models;
 using HealthLog.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using HealthLog.Pages;
 
 namespace HealthLog.ViewModels;
 
@@ -10,27 +11,35 @@ public class HomePageViewModel : BaseViewModel
 {
     private readonly RecordRepository recordRepository;
     private readonly IPageService pageService;
-
+    private readonly UserSettingsService settingsService;
+    private int targetCalories;
+    private int targetProtein;
+    private int targetCarbs;
+    private int targetFat;
+    private int targetWater;
     public HomePageViewModel()
-    : this(new RecordRepository(), new PageService())
+    : this(new RecordRepository(), new PageService(), new UserSettingsService())
     {
     }
 
     public HomePageViewModel(
         RecordRepository recordRepository,
-        IPageService pageService
+        IPageService pageService,
+        UserSettingsService settingsService
         )
     {
         // Inject dependencies (database and UI service)
         this.recordRepository = recordRepository;
         this.pageService = pageService;
-
+        this.settingsService = settingsService;
         // Set current date
         DateText = "Date: " + DateTime.Now.ToString("dd/MM/yyyy");
+        LoadTargetValues();
         // Commands for user actions
         EstimateCommand = new Command(async () => await OnEstimateAsync());
         PreviousRecordsCommand = new Command(async () => await OnPreviousRecordsAsync());
         SelectFoodCommand = new Command<string>(OnSelectFood);
+        GoalsSettingsCommand = new Command(async () => await OnGoalsSettingsAsync());
     }
 
     private string dateText = "";
@@ -57,7 +66,7 @@ public class HomePageViewModel : BaseViewModel
         }
     }
 
-    private string caloriesText = "- Calories : 0 Kcal";
+    private string caloriesText = "- Calories : 0/0 Kcal";
     public string CaloriesText
     {
         get => caloriesText;
@@ -68,7 +77,7 @@ public class HomePageViewModel : BaseViewModel
         }
     }
 
-    private string proteinText = "- Protein : 0 g";
+    private string proteinText = "- Protein : 0/0 g";
     public string ProteinText
     {
         get => proteinText;
@@ -79,7 +88,7 @@ public class HomePageViewModel : BaseViewModel
         }
     }
 
-    private string carbsText = "- Carbs : 0 g";
+    private string carbsText = "- Carbs : 0/0 g";
     public string CarbsText
     {
         get => carbsText;
@@ -90,7 +99,7 @@ public class HomePageViewModel : BaseViewModel
         }
     }
 
-    private string fatText = "- Fat : 0 g";
+    private string fatText = "- Fat : 0/0 g";
     public string FatText
     {
         get => fatText;
@@ -101,7 +110,7 @@ public class HomePageViewModel : BaseViewModel
         }
     }
 
-    private string waterText = "- Water : 0 ml";
+    private string waterText = "- Water : 0/0 ml";
     public string WaterText
     {
         get => waterText;
@@ -125,6 +134,7 @@ public class HomePageViewModel : BaseViewModel
 
     public ICommand EstimateCommand { get; }
     public ICommand PreviousRecordsCommand { get; }
+    public ICommand GoalsSettingsCommand { get; }
     public bool IsHomePage => true;
     // Calculate nutrition based on user input
     private async Task OnEstimateAsync()
@@ -138,54 +148,71 @@ public class HomePageViewModel : BaseViewModel
             return;
         }
         // Split input into food items
-        string[] foods = input.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-        // Initialize total nutrition values
-        int calories = 0;
-        int protein = 0;
-        int carbs = 0;
-        int fat = 0;
-        int water = 0;
-        // Store unsupported foods
+        string[] entries = input.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+        double calories = 0;
+        double protein = 0;
+        double carbs = 0;
+        double fat = 0;
+        double water = 0;
+
         List<string> unsupportedFoods = new();
 
-        foreach (string food in foods)
+        foreach (string entry in entries)
         {
-            string item = food.Trim().ToLower();
+            string part = entry.Trim().ToLower();
 
-            if (string.IsNullOrWhiteSpace(item))
+            if (string.IsNullOrWhiteSpace(part))
                 continue;
 
-            if (FoodData.Items.ContainsKey(item))
+            string[] pieces = part.Split(':', StringSplitOptions.RemoveEmptyEntries);
+
+            if (pieces.Length != 2)
             {
-                // Add nutrition values
-                var data = FoodData.Items[item];
-                calories += data.Calories;
-                protein += data.Protein;
-                carbs += data.Carbs;
-                fat += data.Fat;
-                water += data.Water;
+                unsupportedFoods.Add(part);
+                continue;
+            }
+
+            string foodName = pieces[0].Trim();
+
+            if (!double.TryParse(pieces[1].Trim(), out double grams) || grams <= 0)
+            {
+                unsupportedFoods.Add(part);
+                continue;
+            }
+
+            if (FoodData.Items.ContainsKey(foodName))
+            {
+                var data = FoodData.Items[foodName];
+                double ratio = grams / 100.0;
+
+                calories += data.Calories * ratio;
+                protein += data.Protein * ratio;
+                carbs += data.Carbs * ratio;
+                fat += data.Fat * ratio;
+                water += data.Water * ratio;
             }
             else
-            {// Save unsupported food
-                unsupportedFoods.Add(item);
+            {
+                unsupportedFoods.Add(foodName);
             }
         }
 
-        CaloriesText = $"- Calories : {calories} Kcal";
-        ProteinText = $"- Protein : {protein} g";
-        CarbsText = $"- Carbs : {carbs} g";
-        FatText = $"- Fat : {fat} g";
-        WaterText = $"- Water : {water} ml";
+        CaloriesText = $"- Calories : {calories:F1}/{targetCalories} Kcal";
+        ProteinText = $"- Protein : {protein:F1}/{targetProtein} g";
+        CarbsText = $"- Carbs : {carbs:F1}/{targetCarbs} g";
+        FatText = $"- Fat : {fat:F1}/{targetFat} g";
+        WaterText = $"- Water : {water:F1}/{targetWater} ml";
         // Save record to database
         FoodRecord record = new FoodRecord
         {
             Date = DateTime.Now.ToString("dd/MM/yyyy"),
             RecordName = input,
-            Calories = calories,
-            Protein = protein,
-            Carbs = carbs,
-            Fat = fat,
-            Water = water
+            Calories = (int)Math.Round(calories),
+            Protein = (int)Math.Round(protein),
+            Carbs = (int)Math.Round(carbs),
+            Fat = (int)Math.Round(fat),
+            Water = (int)Math.Round(water)
         };
 
         await recordRepository.AddRecordAsync(record);
@@ -229,6 +256,27 @@ public class HomePageViewModel : BaseViewModel
     {
         await pageService.GoToPreviousRecordsAsync();
     }
+    private void LoadTargetValues()
+    {
+        var settings = settingsService.Load();
+
+        targetCalories = settings.TargetCalories;
+        targetProtein = settings.TargetProtein;
+        targetCarbs = settings.TargetCarbs;
+        targetFat = settings.TargetFat;
+        targetWater = settings.TargetWater;
+    }
+    public void RefreshTargets()
+    {
+        LoadTargetValues();
+
+        CaloriesText = $"- Calories : 0/{targetCalories} Kcal";
+        ProteinText = $"- Protein : 0/{targetProtein} g";
+        CarbsText = $"- Carbs : 0/{targetCarbs} g";
+        FatText = $"- Fat : 0/{targetFat} g";
+        WaterText = $"- Water : 0/{targetWater} ml";
+    }
+
     // Update food suggestions based on input
     private void UpdateSuggestions()
     {
@@ -239,10 +287,21 @@ public class HomePageViewModel : BaseViewModel
         if (string.IsNullOrWhiteSpace(input))
             return;
 
+        // Get the last part after comma
+        string lastPart = input.Split(',').Last().Trim();
+
+        // If user already typed grams, only keep food name
+        if (lastPart.Contains(":"))
+        {
+            lastPart = lastPart.Split(':')[0].Trim();
+        }
+
+        if (string.IsNullOrWhiteSpace(lastPart))
+            return;
+
         foreach (var food in FoodData.Items.Keys)
         {
-            // Show matching foods
-            if (food.StartsWith(input) && food != input)
+            if (food.StartsWith(lastPart) && food != lastPart)
             {
                 SuggestedFoods.Add(food);
             }
@@ -254,7 +313,28 @@ public class HomePageViewModel : BaseViewModel
         if (string.IsNullOrWhiteSpace(food))
             return;
 
-        FoodInput = food;
+        string input = (FoodInput ?? "").Trim();
+
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            FoodInput = food;
+            SuggestedFoods.Clear();
+            return;
+        }
+
+        string[] parts = input.Split(',');
+
+        // Replace only the last part
+        parts[parts.Length - 1] = " " + food;
+
+        FoodInput = string.Join(",", parts).Trim() + ":";
         SuggestedFoods.Clear();
+    }
+    private async Task OnGoalsSettingsAsync()
+    {
+        if (Application.Current?.Windows[0]?.Page != null)
+        {
+            await Application.Current.Windows[0].Page.Navigation.PushAsync(new GoalsSettingsPage());
+        }
     }
 }

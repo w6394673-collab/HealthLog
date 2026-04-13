@@ -54,6 +54,7 @@
                         Command="{Binding HomeCommand}" />
                 <Button Text="Previous Records"
         Grid.Column="1">
+                   
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
                      Binding="{Binding IsPreviousPage}"
@@ -62,10 +63,10 @@
                         </DataTrigger>
                     </Button.Triggers>
                 </Button>
-
+                <!-- Goals button -->
                 <Button Text="Goals &amp; Setting"
-                        Grid.Column="2" />
-
+            Grid.Column="2"
+            Command="{Binding GoalsSettingsCommand}" />
             </Grid>
 
         </VerticalStackLayout>
