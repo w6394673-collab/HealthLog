@@ -321,7 +321,6 @@ public class HomePageViewModel : BaseViewModel
             SuggestedFoods.Clear();
             return;
         }
-
         string[] parts = input.Split(',');
 
         // Replace only the last part

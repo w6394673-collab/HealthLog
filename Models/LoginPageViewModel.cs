@@ -46,16 +46,12 @@ public class LoginPageViewModel : BaseViewModel
     // Handle login logic
     private async Task OnLoginAsync()
     {
-        // Check if input is empty
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
             await pageService.ShowAlertAsync("Error", "Please enter username and password.", "OK");
             return;
         }
-        // Navigate to HomePage
-        if (Application.Current?.Windows[0]?.Page != null)
-        {
-            await Application.Current.Windows[0].Page.Navigation.PushAsync(new HomePage());
-        }
+
+        Application.Current!.MainPage = new NavigationPage(new HomePage());
     }
 }

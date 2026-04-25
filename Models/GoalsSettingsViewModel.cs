@@ -9,20 +9,21 @@ public class GoalsSettingsViewModel : BaseViewModel
 {
     private readonly UserSettingsService settingsService;
     private readonly IPageService pageService;
-
+    // Default constructor
     public GoalsSettingsViewModel()
         : this(new UserSettingsService(), new PageService())
     {
     }
-
+    // Constructor with services
     public GoalsSettingsViewModel(UserSettingsService settingsService, IPageService pageService)
     {
         this.settingsService = settingsService;
         this.pageService = pageService;
-
+        // Commands for buttons
         SaveCommand = new Command(async () => await OnSaveAsync());
         HomeCommand = new Command(async () => await OnHomeAsync());
         PreviousRecordsCommand = new Command(async () => await OnPreviousRecordsAsync());
+        // Load saved data and apply settings
         LoadSettings();
         UpdateBMI();
         UpdateTargets();
@@ -30,6 +31,7 @@ public class GoalsSettingsViewModel : BaseViewModel
         ApplyFontSize();
     }
 
+    // Height input
     private string heightText = "";
     public string HeightText
     {
@@ -38,11 +40,12 @@ public class GoalsSettingsViewModel : BaseViewModel
         {
             heightText = value;
             OnPropertyChanged();
+            // Update BMI and targets when height changes
             UpdateBMI();
             UpdateTargets();
         }
     }
-
+    // Weight input
     private string weightText = "";
     public string WeightText
     {
@@ -51,11 +54,12 @@ public class GoalsSettingsViewModel : BaseViewModel
         {
             weightText = value;
             OnPropertyChanged();
+            // Update BMI and targets when weight changes
             UpdateBMI();
             UpdateTargets();
         }
     }
-
+    // Sex selection
     private string sex = "Male";
     public string Sex
     {
@@ -66,7 +70,7 @@ public class GoalsSettingsViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
-
+    // BMI display text
     private string bmiText = "BMI: 0.00";
     public string BMIText
     {
@@ -77,7 +81,7 @@ public class GoalsSettingsViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
-
+    // Goal selection
     private string goal = "Maintain";
     public string Goal
     {
@@ -86,6 +90,7 @@ public class GoalsSettingsViewModel : BaseViewModel
         {
             goal = value;
             OnPropertyChanged();
+            // Update nutrition targets when goal changes
             UpdateTargets();
         }
     }
@@ -98,6 +103,7 @@ public class GoalsSettingsViewModel : BaseViewModel
         {
             backgroundMode = value;
             OnPropertyChanged();
+            // Apply theme when background mode changes
             ApplyTheme();
         }
     }
@@ -110,6 +116,7 @@ public class GoalsSettingsViewModel : BaseViewModel
         {
             fontSizeMode = value;
             OnPropertyChanged();
+            // Apply font size when setting changes
             ApplyFontSize();
         }
     }
@@ -206,6 +213,7 @@ public class GoalsSettingsViewModel : BaseViewModel
     public ICommand HomeCommand { get; }
     public ICommand PreviousRecordsCommand { get; }
     public bool IsGoalsPage => true;
+    // Calculate BMI
     private void UpdateBMI()
     {
         if (double.TryParse(HeightText, out double heightCm) &&
@@ -221,7 +229,7 @@ public class GoalsSettingsViewModel : BaseViewModel
             BMIText = "BMI: 0.00";
         }
     }
-
+    // Calculate nutrition targets based on goal
     private void UpdateTargets()
     {
         int calories = 0;
@@ -263,7 +271,7 @@ public class GoalsSettingsViewModel : BaseViewModel
         TargetFatText = $"Fat target: {fat} g";
         TargetWaterText = $"Water target: {water} ml";
     }
-
+    // Apply background theme
     private void ApplyTheme()
     {
         if (BackgroundMode == "Dark")
@@ -287,7 +295,7 @@ public class GoalsSettingsViewModel : BaseViewModel
             _ => 16
         };
     }
-
+    // Load saved user settings
     private void LoadSettings()
     {
         var settings = settingsService.Load();
@@ -303,7 +311,7 @@ public class GoalsSettingsViewModel : BaseViewModel
         BackgroundMode = settings.BackgroundMode;
         FontSizeMode = settings.FontSizeMode;
     }
-
+    // Save user settings
     private async Task OnSaveAsync()
     {
         double.TryParse(HeightText, out double heightCm);
@@ -342,11 +350,12 @@ public class GoalsSettingsViewModel : BaseViewModel
 
         await pageService.ShowAlertAsync("Saved", "Your settings have been saved.", "OK");
     }
+    // Go back to home page
     private async Task OnHomeAsync()
     {
         if (Application.Current?.Windows[0]?.Page != null)
         {
-            await Application.Current.Windows[0].Page.Navigation.PopAsync();
+            await Application.Current.Windows[0].Page.Navigation.PopToRootAsync();
         }
     }
 
@@ -354,10 +363,11 @@ public class GoalsSettingsViewModel : BaseViewModel
     {
         if (Application.Current?.Windows[0]?.Page != null)
         {
+            await Application.Current.Windows[0].Page.Navigation.PopToRootAsync();
             await Application.Current.Windows[0].Page.Navigation.PushAsync(new PreviousRecordsPage());
         }
     }
-
+    // Get number from target text
     private int GetNumber(string text)
     {
         string number = new string(text.Where(char.IsDigit).ToArray());

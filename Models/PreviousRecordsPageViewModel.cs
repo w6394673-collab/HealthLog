@@ -88,13 +88,15 @@ public class PreviousRecordsPageViewModel : BaseViewModel
     {
         if (Application.Current?.Windows[0]?.Page != null)
         {
-            await Application.Current.Windows[0].Page.Navigation.PopAsync();
+            await Application.Current.Windows[0].Page.Navigation.PopToRootAsync();
         }
     }
+
     private async Task OnGoalsSettingsAsync()
     {
         if (Application.Current?.Windows[0]?.Page != null)
         {
+            await Application.Current.Windows[0].Page.Navigation.PopToRootAsync();
             await Application.Current.Windows[0].Page.Navigation.PushAsync(new GoalsSettingsPage());
         }
     }
