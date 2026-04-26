@@ -33,6 +33,8 @@ public class HomePageViewModel : BaseViewModel
         this.pageService = pageService;
         this.settingsService = settingsService;
         // Set current date
+        // AI-assisted: AI helped me understand how to display the current system date.
+        // I tested and adapted this part for my app.
         DateText = "Date: " + DateTime.Now.ToString("dd/MM/yyyy");
         LoadTargetValues();
         // Commands for user actions
@@ -276,7 +278,8 @@ public class HomePageViewModel : BaseViewModel
         FatText = $"- Fat : 0/{targetFat} g";
         WaterText = $"- Water : 0/{targetWater} ml";
     }
-
+    // AI-assisted: AI helped me understand and improve this food suggestion logic.
+    // I tested and modified it to fit my Home page and food estimation function.
     // Update food suggestions based on input
     private void UpdateSuggestions()
     {
@@ -307,7 +310,8 @@ public class HomePageViewModel : BaseViewModel
             }
         }
     }
-
+    // AI-assisted: This part is connected to the food suggestion function.
+    // I adapted it so the selected food can be added back into the input box.
     private void OnSelectFood(string? food)
     {
         if (string.IsNullOrWhiteSpace(food))
